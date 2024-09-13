@@ -139,7 +139,7 @@
 			width: 100%;
 			max-width: 1200px;
 			margin: 0 auto;
-			padding: 0 24px;
+			padding: 15px 24px;
 		}
 
 		.content-area {
@@ -193,7 +193,7 @@
 <body class="antialiased text-center">
 	<header class="sticky top-0 z-10 bg-opacity-70 backdrop-blur-lg w-full" style="background: var(--background-color)">
 		<nav class="flex justify-between items-center py-4 max-w-6xl mx-auto px-6">
-			<div class="text-xl font-semibold" style="color: var(--primary-color)">PR</div>
+			<div class="text-xl font-semibold" style="color: var(--primary-color)"></div>
 			<div class="profile-image"></div>
 			<div class="hidden md:flex space-x-8">
 				<a href="#summary" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Summary</a>
@@ -229,7 +229,7 @@
 			<p class="text-2xl mb-6" style="color: var(--secondary-color)">Full Stack Software Engineer</p>
 			<div class="text-xl leading-relaxed max-w-4xl mx-auto mb-8" style="color: var(--text-color)">
 				<p class="mb-4">
-					Results-driven Full Stack Software Engineer with eight years of experience in designing, developing,
+					Full Stack Software Engineer with eight years of experience in designing, developing,
 					and deploying scalable software solutions. Expertise in .NET framework, Angular, and AWS cloud
 					services, with a proven track record of leading development teams through complex projects.
 				</p>
@@ -535,20 +535,35 @@
 			mobileMenu.classList.toggle('show');
 		});
 
-		// Close mobile menu when a link is clicked
 		document.querySelectorAll('#mobileMenu a').forEach(link => {
 			link.addEventListener('click', () => {
 				mobileMenu.classList.remove('show');
 			});
 		});
 
-		// Close mobile menu when clicking outside
 		document.addEventListener('click', (event) => {
 			if (!mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
 				mobileMenu.classList.remove('show');
 			}
 		});
+
+		if (history.scrollRestoration) {
+			history.scrollRestoration = 'manual';
+		}
+		window.scrollTo(0, 0);
+
+		document.addEventListener('DOMContentLoaded', function () {
+			window.scrollTo(0, 0);
+		});
 	</script>
+	<script>
+		window.ignitifySettings = { ignitifyId: "bc6c43f7-d11d-4ed8-aa4b-13881e2253a9" };
+	</script>
+
+	<script>
+		(function () { var w = window; var ic = w.Ignitify; if (typeof ic === 'function') { ic('reattach_activator'); ic('update', w.ignitifySettings); } else { var d = document; var i = function () { i.c(arguments); }; i.q = []; i.c = function (args) { i.q.push(args); }; w.Ignitify = i; var l = function () { var s = d.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = 'https://ignitify-tagmanager-scripts.drivecentric.io/prod/ignitify-tagmanager.js'; var x = d.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); }; if (document.readyState === 'complete') { l(); } else if (w.attachEvent) { w.attachEvent('onload', l); } else { w.addEventListener('load', l, false); } } })();
+	</script>
+
 </body>
 
 </html>
