@@ -164,22 +164,63 @@
 			font-weight: bold;
 			color: var(--text-color);
 		}
+
+		#mobileMenu {
+			background: var(--background-color);
+			transition: max-height 0.3s ease-out;
+			max-height: 0;
+			overflow: hidden;
+		}
+
+		#mobileMenu.show {
+			max-height: 300px;
+		}
+
+		.profile-image {
+			width: 50px;
+			height: 50px;
+			border-radius: 50%;
+			background-image: url('https://ca.slack-edge.com/T03SGJX1Q-U03F84DFM7Y-1a85a174f606-512');
+			background-size: cover;
+			background-position: center;
+			position: absolute;
+			top: 10px;
+			left: 10px;
+		}
 	</style>
 </head>
 
 <body class="antialiased text-center">
 	<header class="sticky top-0 z-10 bg-opacity-70 backdrop-blur-lg w-full" style="background: var(--background-color)">
-		<nav class="flex justify-center items-center py-4 space-x-8 max-w-6xl mx-auto px-6">
-			<a href="#summary" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Summary</a>
-			<a href="#experience" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Experience</a>
-			<a href="#skills" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Skills</a>
-			<a href="#education" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Education</a>
-			<a href="#contact" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Contact</a>
-			<label class="toggle-switch">
-				<input type="checkbox" id="darkModeToggle">
-				<span class="slider round"></span>
-			</label>
+		<nav class="flex justify-between items-center py-4 max-w-6xl mx-auto px-6">
+			<div class="text-xl font-semibold" style="color: var(--primary-color)">PR</div>
+			<div class="profile-image"></div>
+			<div class="hidden md:flex space-x-8">
+				<a href="#summary" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Summary</a>
+				<a href="#experience" class="nav-link text-sm font-semibold"
+					style="color: var(--text-color)">Experience</a>
+				<a href="#skills" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Skills</a>
+				<a href="#education" class="nav-link text-sm font-semibold"
+					style="color: var(--text-color)">Education</a>
+				<a href="#contact" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Contact</a>
+			</div>
+			<div class="flex items-center space-x-4">
+				<label class="toggle-switch">
+					<input type="checkbox" id="darkModeToggle">
+					<span class="slider round"></span>
+				</label>
+				<button id="mobileMenuBtn" class="md:hidden">
+					<i data-feather="menu" class="w-6 h-6" style="color: var(--primary-color)"></i>
+				</button>
+			</div>
 		</nav>
+		<div id="mobileMenu" class="md:hidden">
+			<a href="#summary" class="block py-2 px-4 nav-link" style="color: var(--text-color)">Summary</a>
+			<a href="#experience" class="block py-2 px-4 nav-link" style="color: var(--text-color)">Experience</a>
+			<a href="#skills" class="block py-2 px-4 nav-link" style="color: var(--text-color)">Skills</a>
+			<a href="#education" class="block py-2 px-4 nav-link" style="color: var(--text-color)">Education</a>
+			<a href="#contact" class="block py-2 px-4 nav-link" style="color: var(--text-color)">Contact</a>
+		</div>
 	</header>
 
 	<main>
@@ -486,6 +527,27 @@
 		} else {
 			setDarkMode(false);
 		}
+
+		const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+		const mobileMenu = document.getElementById('mobileMenu');
+
+		mobileMenuBtn.addEventListener('click', () => {
+			mobileMenu.classList.toggle('show');
+		});
+
+		// Close mobile menu when a link is clicked
+		document.querySelectorAll('#mobileMenu a').forEach(link => {
+			link.addEventListener('click', () => {
+				mobileMenu.classList.remove('show');
+			});
+		});
+
+		// Close mobile menu when clicking outside
+		document.addEventListener('click', (event) => {
+			if (!mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+				mobileMenu.classList.remove('show');
+			}
+		});
 	</script>
 </body>
 
