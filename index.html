@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Patrick Rottman - Full Stack Software Engineer</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600&display=swap');
+
+		:root {
+			--primary-color: #000;
+			--secondary-color: #86868b;
+			--accent-color: #0071e3;
+			--background-color: #fff;
+			--text-color: #1d1d1f;
+			--card-bg: #f5f5f7;
+		}
+
+		body {
+			font-family: 'SF Pro Display', sans-serif;
+			background: var(--background-color);
+			color: var(--text-color);
+			line-height: 1.47059;
+			display: flex;
+			flex-direction: column;
+			min-height: 100vh;
+		}
+
+		body.dark-mode {
+			--primary-color: #f5f5f7;
+			--secondary-color: #a1a1a6;
+			--accent-color: #2997ff;
+			--background-color: #1d1d1f;
+			--text-color: #f5f5f7;
+			--card-bg: #2c2c2e;
+		}
+
+		.nav-link {
+			transition: color 0.3s ease;
+		}
+
+		.nav-link:hover {
+			color: var(--accent-color);
+		}
+
+		.tech-icon {
+			width: 28px;
+			height: 28px;
+			color: var(--primary-color);
+		}
+
+		.fade-in {
+			opacity: 0;
+			transform: translateY(20px);
+			transition: opacity 0.8s ease, transform 0.8s ease;
+		}
+
+		.fade-in.is-visible {
+			opacity: 1;
+			transform: translateY(0);
+		}
+
+		.skill-item {
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+			border-radius: 18px;
+			padding: 20px;
+			background: var(--card-bg);
+		}
+
+		.skill-item:hover {
+			transform: scale(1.03);
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		.toggle-switch {
+			width: 40px;
+			height: 24px;
+			position: relative;
+			display: inline-block;
+		}
+
+		.toggle-switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: #86868b;
+			transition: 0.4s;
+			border-radius: 24px;
+		}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 20px;
+			width: 20px;
+			left: 2px;
+			bottom: 2px;
+			background: #fff;
+			transition: 0.4s;
+			border-radius: 50%;
+		}
+
+		input:checked+.slider {
+			background: var(--accent-color);
+		}
+
+		input:checked+.slider:before {
+			transform: translateX(16px);
+		}
+
+		.btn {
+			background: var(--accent-color);
+			color: #fff;
+			padding: 12px 24px;
+			border-radius: 980px;
+			font-size: 17px;
+			font-weight: 400;
+			transition: all 0.3s ease;
+		}
+
+		.btn:hover {
+			background-color: #0077ED;
+		}
+
+		main {
+			flex-grow: 1;
+			width: 100%;
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 0 24px;
+		}
+
+		.content-area {
+			max-width: 900px;
+			margin: 0 auto;
+		}
+
+		.year-bubble {
+			width: 2.5rem;
+			height: 2.5rem;
+			border-radius: 50%;
+			background-color: var(--card-bg);
+			border: 4px solid var(--accent-color);
+			z-index: 10;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.year-bubble span {
+			font-size: 0.75rem;
+			font-weight: bold;
+			color: var(--text-color);
+		}
+	</style>
+</head>
+
+<body class="antialiased text-center">
+	<header class="sticky top-0 z-10 bg-opacity-70 backdrop-blur-lg w-full" style="background: var(--background-color)">
+		<nav class="flex justify-center items-center py-4 space-x-8 max-w-6xl mx-auto px-6">
+			<a href="#summary" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Summary</a>
+			<a href="#experience" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Experience</a>
+			<a href="#skills" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Skills</a>
+			<a href="#education" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Education</a>
+			<a href="#contact" class="nav-link text-sm font-semibold" style="color: var(--text-color)">Contact</a>
+			<label class="toggle-switch">
+				<input type="checkbox" id="darkModeToggle">
+				<span class="slider round"></span>
+			</label>
+		</nav>
+	</header>
+
+	<main>
+		<section id="summary" class="mb-24 fade-in">
+			<h1 class="text-5xl font-semibold mb-4" style="color: var(--primary-color)">Patrick Rottman</h1>
+			<p class="text-2xl mb-6" style="color: var(--secondary-color)">Full Stack Software Engineer</p>
+			<div class="text-xl leading-relaxed max-w-4xl mx-auto mb-8" style="color: var(--text-color)">
+				<p class="mb-4">
+					Results-driven Full Stack Software Engineer with eight years of experience in designing, developing,
+					and deploying scalable software solutions. Expertise in .NET framework, Angular, and AWS cloud
+					services, with a proven track record of leading development teams through complex projects.
+				</p>
+				<p class="mb-4">
+					Currently spearheading AI initiatives and managing critical integrations with major corporations.
+					Known for consistently delivering innovative features that enhance efficiency and user engagement,
+					while balancing team leadership with hands-on development.
+				</p>
+				<p>
+					With a strong educational background in Information Technology and Computer Science from the
+					University of Missouri - Columbia, I bring both technical expertise and business acumen to create
+					solutions that drive real value.
+				</p>
+			</div>
+			<a href="#contact" class="btn inline-block">Get in touch</a>
+		</section>
+
+		<section id="experience" class="mb-24 fade-in">
+			<h2 class="text-3xl font-semibold mb-10 text-center" style="color: var(--primary-color)">Experience</h2>
+			<div class="relative content-area">
+				<!-- Timeline line -->
+				<div class="absolute top-0 bottom-0 left-1/2 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+
+				<!-- Experience items -->
+				<div class="space-y-16">
+					<!-- DriveCentric -->
+					<div class="relative">
+						<div class="flex items-center">
+							<div class="flex-1 text-right pr-8">
+								<h3 class="text-xl font-semibold" style="color: var(--primary-color)">Software Engineer
+									III, Team Lead</h3>
+								<p class="text-md" style="color: var(--secondary-color)">DriveCentric | St. Louis, MO
+								</p>
+							</div>
+							<div class="year-bubble">
+								<span>2022</span>
+							</div>
+							<div class="flex-1 pl-8">
+								<p class="text-md" style="color: var(--secondary-color)">2022 — Present</p>
+							</div>
+						</div>
+						<div class="mt-4 ml-auto mr-auto max-w-lg skill-item">
+							<ul class="text-left text-lg space-y-2">
+								<li class="flex items-start">
+									<span class="inline-block mr-2 mt-1 text-lg"
+										style="color: var(--accent-color)">•</span>
+									Leading the company's AI initiative 'AIM,' a cloud-based marketing department
+									creating personalized messaging for unparalleled engagement.
+								</li>
+								<li class="flex items-start">
+									<span class="inline-block mr-2 mt-1 text-lg"
+										style="color: var(--accent-color)">•</span>
+									Chosen to lead integration with Ford after consistently beating deadlines and
+									exceeding expectations.
+								</li>
+								<li class="flex items-start">
+									<span class="inline-block mr-2 mt-1 text-lg"
+										style="color: var(--accent-color)">•</span>
+									Balancing team needs while maintaining 80% focus on development.
+								</li>
+								<li class="flex items-start">
+									<span class="inline-block mr-2 mt-1 text-lg"
+										style="color: var(--accent-color)">•</span>
+									Maintaining close collaboration with business stakeholders for rapid response to
+									customer needs.
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- Cigna Senior Analyst -->
+					<div class="relative">
+						<div class="flex items-center">
+							<div class="flex-1 text-right pr-8">
+								<h3 class="text-xl font-semibold" style="color: var(--primary-color)">Software
+									Engineering Senior Analyst</h3>
+								<p class="text-md" style="color: var(--secondary-color)">Cigna | St. Louis, MO</p>
+							</div>
+							<div class="year-bubble">
+								<span>2020</span>
+							</div>
+							<div class="flex-1 pl-8">
+								<p class="text-md" style="color: var(--secondary-color)">June 2020 — May 2022</p>
+							</div>
+						</div>
+						<div class="mt-4 ml-auto mr-auto max-w-lg skill-item">
+							<ul class="text-left text-lg space-y-2">
+								<li class="flex items-start">
+									<span class="inline-block mr-2 mt-1 text-lg"
+										style="color: var(--accent-color)">•</span>
+									Led Full Stack Development on an enterprise-grade application for the entire book of
+									business, including the Department of Defense.
+								</li>
+								<li class="flex items-start">
+									<span class="inline-block mr-2 mt-1 text-lg"
+										style="color: var(--accent-color)">•</span>
+									Built a production application from the ground up as the only .NET developer, in
+									record time.
+								</li>
+								<li class="flex items-start">
+									<span class="inline-block mr-2 mt-1 text-lg"
+										style="color: var(--accent-color)">•</span>
+									Collaborated directly with clients to identify and automate inefficiencies, with one
+									automation saving a month's worth of time across employees.
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- Cigna Intern -->
+					<div class="relative">
+						<div class="flex items-center">
+							<div class="flex-1 text-right pr-8">
+								<h3 class="text-xl font-semibold" style="color: var(--primary-color)">Software
+									Engineering Intern</h3>
+								<p class="text-md" style="color: var(--secondary-color)">Cigna | St. Louis, MO</p>
+							</div>
+							<div class="year-bubble">
+								<span>2017</span>
+							</div>
+							<div class="flex-1 pl-8">
+								<p class="text-md" style="color: var(--secondary-color)">May 2017 — June 2020</p>
+							</div>
+						</div>
+						<div class="mt-4 ml-auto mr-auto max-w-lg skill-item">
+							<p class="text-lg" style="color: var(--text-color)">
+								Worked with full responsibilities of a full-time developer, gaining accelerated exposure
+								to real-world software development.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section id="skills" class="mb-24 fade-in">
+			<h2 class="text-3xl font-semibold mb-10" style="color: var(--primary-color)">Technical Expertise</h2>
+			<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 content-area">
+				<div class="skill-item">
+					<i data-feather="hash" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">C#</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="code" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">HTML5</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="file-text" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">JavaScript</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="terminal" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">PowerShell</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="file-text" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">TypeScript</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="layout" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">Angular</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="cloud" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">AWS</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="database" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">SQL</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="git-branch" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">Git</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="box" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">Docker</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="server" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">Terraform</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="cpu" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">IoT</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="database" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">Redis</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="database" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">Postgres</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="pen-tool" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">Figma</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="github" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">GitHub</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="play-circle" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">GitHub Actions</p>
+				</div>
+				<div class="skill-item">
+					<i data-feather="trello" class="tech-icon mx-auto mb-2"></i>
+					<p class="font-semibold">Jira</p>
+				</div>
+			</div>
+		</section>
+
+		<section id="education" class="mb-24 fade-in">
+			<h2 class="text-3xl font-semibold mb-10" style="color: var(--primary-color)">Education</h2>
+			<div class="skill-item content-area">
+				<h3 class="text-2xl font-semibold mb-2" style="color: var(--primary-color)">University of Missouri -
+					Columbia</h3>
+				<p class="text-lg mb-2">Bachelor of Science in Information Technology</p>
+				<p class="text-lg mb-2">Minor in Computer Science | Minor in Business</p>
+				<p class="text-lg mb-4">GPA: 3.828 | Major GPA: 3.978</p>
+				<h4 class="text-lg font-semibold mb-2" style="color: var(--secondary-color)">Accomplishments</h4>
+				<ul class="list-none text-lg space-y-2">
+					<li>Dean's Honor Roll | Engineering | Spring 2016 — Spring 2020</li>
+					<li>Outstanding Student in EE and CS | Fall 2018 — Spring 2019</li>
+				</ul>
+			</div>
+		</section>
+
+		<section id="contact" class="fade-in mb-24">
+			<h2 class="text-3xl font-semibold mb-8" style="color: var(--primary-color)">Let's Connect</h2>
+			<a href="mailto:patrick.rottman@icloud.com" class="btn inline-block mb-8">Contact Me</a>
+			<div class="text-lg">
+				<p>Chesterfield, MO</p>
+				<p>(314) 960-1664</p>
+				<p>patrick.rottman@icloud.com</p>
+			</div>
+		</section>
+	</main>
+
+	<footer style="color: var(--secondary-color)" class="text-sm py-8 w-full">
+		<p>&copy; 2024 Patrick Rottman. All rights reserved.</p>
+	</footer>
+
+	<script>
+		feather.replace();
+
+		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+			anchor.addEventListener('click', function (e) {
+				e.preventDefault();
+				document.querySelector(this.getAttribute('href')).scrollIntoView({
+					behavior: 'smooth'
+				});
+			});
+		});
+
+		const observerOptions = {
+			root: null,
+			rootMargin: '0px',
+			threshold: 0.1
+		};
+
+		const observer = new IntersectionObserver((entries, observer) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('is-visible');
+					observer.unobserve(entry.target);
+				}
+			});
+		}, observerOptions);
+
+		document.querySelectorAll('.fade-in').forEach(el => {
+			observer.observe(el);
+		});
+
+		const darkModeToggle = document.getElementById('darkModeToggle');
+
+		function setDarkMode(isDark) {
+			if (isDark) {
+				document.body.classList.add('dark-mode');
+				darkModeToggle.checked = true;
+			} else {
+				document.body.classList.remove('dark-mode');
+				darkModeToggle.checked = false;
+			}
+			localStorage.setItem('darkMode', isDark);
+		}
+
+		darkModeToggle.addEventListener('change', () => {
+			setDarkMode(darkModeToggle.checked);
+		});
+
+		const storedDarkMode = localStorage.getItem('darkMode');
+		if (storedDarkMode !== null) {
+			setDarkMode(storedDarkMode === 'true');
+		} else {
+			setDarkMode(false);
+		}
+	</script>
+</body>
+
+</html>
