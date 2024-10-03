@@ -557,95 +557,98 @@
         <p>&copy; 2024 Patrick Rottman. All rights reserved.</p>
     </footer>
 
-    <script>
-        feather.replace();
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+<script>
+    feather.replace();
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
             });
         });
-
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
-
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
-        });
-
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const sunIcon = document.querySelector('.toggle-icon .sun');
-        const moonIcon = document.querySelector('.toggle-icon .moon');
-
-        function setDarkMode(isDark) {
-            if (isDark) {
-                document.body.classList.add('dark-mode');
-                darkModeToggle.checked = true;
-                sunIcon.style.display = 'none';
-                moonIcon.style.display = 'block';
-            } else {
-                document.body.classList.remove('dark-mode');
-                darkModeToggle.checked = false;
-                sunIcon.style.display = 'block';
-                moonIcon.style.display = 'none';
+    });
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
             }
-            localStorage.setItem('darkMode', isDark);
-        }
-
-        darkModeToggle.addEventListener('change', () => {
-            setDarkMode(darkModeToggle.checked);
         });
-
-        const storedDarkMode = localStorage.getItem('darkMode');
-        if (storedDarkMode !== null) {
-            setDarkMode(storedDarkMode === 'true');
+    }, observerOptions);
+    document.querySelectorAll('.fade-in').forEach(el => {
+        observer.observe(el);
+    });
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const sunIcon = document.querySelector('.toggle-icon .sun');
+    const moonIcon = document.querySelector('.toggle-icon .moon');
+    
+    function detectColorScheme() {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
         } else {
-            setDarkMode(false);
+            return 'light';
         }
-
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('show');
-        });
-
-        document.querySelectorAll('#mobileMenu a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.remove('show');
-            });
-        });
-
-        document.addEventListener('click', (event) => {
-            if (!mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
-                mobileMenu.classList.remove('show');
-            }
-        });
-
-        if (history.scrollRestoration) {
-            history.scrollRestoration = 'manual';
+    }
+    
+    function setDarkMode(isDark) {
+        if (isDark) {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        } else {
+            document.body.classList.remove('dark-mode');
+            darkModeToggle.checked = false;
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
         }
+        localStorage.setItem('darkMode', isDark);
+    }
+    
+    darkModeToggle.addEventListener('change', () => {
+        setDarkMode(darkModeToggle.checked);
+    });
+    
+    const storedDarkMode = localStorage.getItem('darkMode');
+    if (storedDarkMode !== null) {
+        setDarkMode(storedDarkMode === 'true');
+    } else {
+        setDarkMode(detectColorScheme() === 'dark');
+    }
+    
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        const newColorScheme = e.matches ? 'dark' : 'light';
+        setDarkMode(newColorScheme === 'dark');
+    });
+    
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('show');
+    });
+    document.querySelectorAll('#mobileMenu a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('show');
+        });
+    });
+    document.addEventListener('click', (event) => {
+        if (!mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+            mobileMenu.classList.remove('show');
+        }
+    });
+    if (history.scrollRestoration) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+    document.addEventListener('DOMContentLoaded', function () {
         window.scrollTo(0, 0);
-
-        document.addEventListener('DOMContentLoaded', function () {
-            window.scrollTo(0, 0);
-        });
-    </script>
+    });
+</script>
 
 </body>
 
