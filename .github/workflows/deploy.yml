@@ -24,6 +24,7 @@ jobs:
         working-directory: patrickrottman
 
       - name: Build
+        working-directory: patrickrottman
         run: |
           if [ ${{ github.event_name }} == 'pull_request' ]; then
             npm run build -- --configuration production --base-href "/patrickrottman.com/pr-${{ github.event.number }}/"
