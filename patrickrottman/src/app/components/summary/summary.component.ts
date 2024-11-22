@@ -21,10 +21,14 @@ export class SummaryComponent {
   ) {}
 
   scrollToSection(elementId: string): void {
-    this.router.navigate(['/home']).then(() => {
-      setTimeout(() => {
-        this.viewportScroller.scrollToAnchor(elementId);
-      }, 100);
-    });
+    if (this.router.url !== '/') {
+      this.router.navigate(['/']).then(() => {
+        setTimeout(() => {
+          this.viewportScroller.scrollToAnchor(elementId);
+        }, 100);
+      });
+    } else {
+      this.viewportScroller.scrollToAnchor(elementId);
+    }
   }
 } 
