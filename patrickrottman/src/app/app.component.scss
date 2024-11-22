@@ -1,0 +1,48 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 24px;
+    box-sizing: border-box;
+
+    @media (max-width: 768px) {
+      padding: 15px 16px;
+    }
+  }
+
+  footer {
+    padding: 2rem;
+    text-align: center;
+    color: var(--secondary-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    .github-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+      font-size: 0.875rem;
+
+      &:hover {
+        color: var(--accent-color);
+      }
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}

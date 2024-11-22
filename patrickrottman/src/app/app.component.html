@@ -1,0 +1,16 @@
+<div class="app-container" [class.dark-theme]="themeService.isDarkMode$ | async">
+  <app-header></app-header>
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+  <footer>
+    <p>&copy; 2024 Patrick Rottman. All rights reserved.</p>
+    <a href="https://github.com/patrickrottman/patrickrottman.com" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="github-link">
+      <mat-icon>code</mat-icon>
+      <span>View Source</span>
+    </a>
+  </footer>
+</div>

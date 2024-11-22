@@ -1,0 +1,33 @@
+<section id="experience" class="experience-section fade-in">
+  <h2>Experience</h2>
+  <div class="timeline">
+    @for (exp of experiences; track exp.title) {
+      <div class="timeline-item">
+        <div class="timeline-header">
+          <div class="timeline-content">
+            <h3>{{ exp.title }}</h3>
+            <p class="company">{{ exp.company }} | {{ exp.location }}</p>
+          </div>
+          <div class="year-bubble">
+            <span>{{ exp.year }}</span>
+          </div>
+          <div class="period">
+            <p>{{ exp.period }}</p>
+          </div>
+        </div>
+        <mat-card class="achievements">
+          <mat-card-content>
+            <ul>
+              @for (achievement of exp.achievements; track achievement) {
+                <li>
+                  <span class="bullet">•</span>
+                  {{ achievement }}
+                </li>
+              }
+            </ul>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    }
+  </div>
+</section> 

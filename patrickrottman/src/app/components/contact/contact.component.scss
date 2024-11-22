@@ -1,0 +1,44 @@
+.contact-section {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: var(--primary-color);
+  }
+
+  [mat-raised-button] {
+    margin-bottom: 1.5rem;
+    padding: 12px 24px;
+    border-radius: 980px;
+    font-size: 17px;
+    font-weight: 400;
+    font-family: inherit;
+    
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .contact-info {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-top: 1rem;
+
+    p {
+      margin: 0.25rem 0;
+      
+      a {
+        color: var(--text-color);
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: var(--accent-color);
+        }
+      }
+    }
+  }
+} 
