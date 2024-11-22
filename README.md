@@ -116,7 +116,9 @@ jobs:
         with:
           folder: patrickrottman/dist/patrickrottman/browser
           branch: gh-pages
-          clean: true
+          clean: false
+          clean-exclude: |
+            pr-*/**
           target-folder: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || '' }}
 ```
 
