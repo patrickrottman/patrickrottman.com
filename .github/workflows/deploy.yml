@@ -35,7 +35,7 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist/patrickrottman/browser
+          folder: patrickrottman/dist/patrickrottman/browser
           branch: gh-pages
           clean: true
           target-folder: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || '' }}
