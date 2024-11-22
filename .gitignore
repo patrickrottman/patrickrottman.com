@@ -1,0 +1,15 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+*.db
+*.db-shm
+*.db-wal
+*.vsidx
+*.testlog
+*.manifest
+*.wsuo
+*.sqlite
+/.vs/patrickrottman.com/config/applicationhost.config
+/patrickrottman/.vscode
+/.vs

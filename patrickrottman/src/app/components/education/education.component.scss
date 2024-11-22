@@ -1,0 +1,58 @@
+.education-section {
+  text-align: center;
+  margin-bottom: 6rem;
+
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    margin-bottom: 2.5rem;
+    color: var(--primary-color);
+  }
+
+  .education-card {
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 2rem;
+    text-align: center;
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+
+    .degree, .minor {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .gpa {
+      margin-bottom: 1.5rem;
+    }
+
+    .accomplishments {
+      text-align: center;
+      
+      h4 {
+        color: var(--secondary-color);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 auto;
+        display: inline-block;
+        text-align: left;
+
+        li {
+          margin-bottom: 0.5rem;
+          line-height: 1.6;
+        }
+      }
+    }
+  }
+} 

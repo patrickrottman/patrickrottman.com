@@ -1,0 +1,101 @@
+.header.mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--background-color);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  min-height: 80px;
+  font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif !important;
+  
+  .profile-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-image: url('https://ca.slack-edge.com/T03SGJX1Q-U03F84DFM7Y-1a85a174f606-512');
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .nav-links {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+
+    a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.875rem;
+      letter-spacing: -0.00875rem;
+      transition: color 0.3s ease;
+      font-family: inherit;
+
+      &:hover {
+        color: var(--accent-color);
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .mobile-menu-button {
+      @media (min-width: 769px) {
+        display: none;
+      }
+
+      mat-icon {
+        color: var(--text-color);
+      }
+    }
+
+    button {
+      mat-icon {
+        color: var(--text-color);
+      }
+    }
+  }
+}
+
+:host ::ng-deep {
+  .mdc-menu-surface.mat-mdc-menu-panel {
+    background-color: var(--background-color);
+
+    .mat-mdc-menu-content {
+      .mat-mdc-menu-item {
+        font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif !important;
+        font-weight: 600;
+        font-size: 0.875rem;
+        letter-spacing: -0.00875rem;
+        color: var(--text-color);
+
+        &:hover {
+          background-color: var(--card-bg);
+        }
+
+        .mat-mdc-menu-item-text {
+          font-family: inherit;
+        }
+      }
+    }
+  }
+} 
