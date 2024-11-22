@@ -28,6 +28,7 @@
 
 ## 📂 Project Structure
 
+```plaintext
 src/
 ├── app/
 │   ├── components/    # Reusable components
@@ -45,7 +46,7 @@ src/
 └── styles/            # Global styles
     ├── animations.scss
     └── theme.scss
-
+```
 ---
 
 ## ⚙️ Development
