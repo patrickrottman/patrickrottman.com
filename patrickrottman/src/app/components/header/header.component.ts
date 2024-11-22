@@ -29,16 +29,24 @@ export class HeaderComponent {
   ) {}
 
   scrollToSection(elementId: string): void {
-    this.router.navigate(['/home']).then(() => {
-      setTimeout(() => {
-        this.viewportScroller.scrollToAnchor(elementId);
-      }, 100);
-    });
+    if (this.router.url !== '/') {
+      this.router.navigate(['/']).then(() => {
+        setTimeout(() => {
+          this.viewportScroller.scrollToAnchor(elementId);
+        }, 100);
+      });
+    } else {
+      this.viewportScroller.scrollToAnchor(elementId);
+    }
   }
 
   navigateHome(): void {
-    this.router.navigate(['/home']).then(() => {
+    if (this.router.url !== '/') {
+      this.router.navigate(['/']).then(() => {
+        window.scrollTo(0, 0);
+      });
+    } else {
       window.scrollTo(0, 0);
-    });
+    }
   }
 } 
