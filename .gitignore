@@ -9,7 +9,7 @@
 *.testlog
 *.manifest
 *.wsuo
-*.json
 *.sqlite
 /.vs/patrickrottman.com/config/applicationhost.config
 /patrickrottman/.vscode
+/.vs
