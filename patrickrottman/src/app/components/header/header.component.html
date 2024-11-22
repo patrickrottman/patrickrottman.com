@@ -1,22 +1,24 @@
 <mat-toolbar class="header">
-  <div class="profile-image" (click)="navigateHome()" role="button" tabindex="0"></div>
-  
-  <div class="nav-links">
-    <a mat-button (click)="scrollToSection('summary')">Summary</a>
-    <a mat-button (click)="scrollToSection('experience')">Experience</a>
-    <a mat-button (click)="scrollToSection('skills')">Skills</a>
-    <a mat-button (click)="scrollToSection('education')">Education</a>
-    <a mat-button (click)="scrollToSection('contact')">Contact</a>
-  </div>
-
-  <div class="actions">
-    <button mat-icon-button (click)="themeService.toggleTheme()">
-      <mat-icon>{{ (themeService.isDarkMode$ | async) ? 'light_mode' : 'dark_mode' }}</mat-icon>
-    </button>
+  <div class="header-content">
+    <div class="profile-image" (click)="navigateHome()" role="button" tabindex="0"></div>
     
-    <button mat-icon-button [matMenuTriggerFor]="menu" class="mobile-menu-button">
-      <mat-icon>menu</mat-icon>
-    </button>
+    <div class="nav-links">
+      <a mat-button (click)="scrollToSection('summary')">Summary</a>
+      <a mat-button (click)="scrollToSection('experience')">Experience</a>
+      <a mat-button (click)="scrollToSection('skills')">Skills</a>
+      <a mat-button (click)="scrollToSection('education')">Education</a>
+      <a mat-button (click)="scrollToSection('contact')">Contact</a>
+    </div>
+
+    <div class="actions">
+      <button mat-icon-button (click)="themeService.toggleTheme()">
+        <mat-icon>{{ (themeService.isDarkMode$ | async) ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+      
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="mobile-menu-button">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
   </div>
 </mat-toolbar>
 
