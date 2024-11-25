@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { P2pService } from './p2p.service';
 import { 
   GameState, 
@@ -8,7 +8,8 @@ import {
   BallState,
   PaddleMoveMessage,
   GameStartMessage,
-  BallSyncMessage 
+  BallSyncMessage,
+  GameEndMessage
 } from '../interfaces/p2p.interfaces';
 
 @Injectable({
@@ -17,8 +18,12 @@ import {
 export class PongService {
   private gameLoop: number | null = null;
   private isHost = false;
+  private isPaused = false;
+  private pauseTimeout: any = null;
 
-  private readonly BALL_SPEED = 1;
+  private readonly BALL_SPEED = 0.3;
+  private readonly INITIAL_BALL_VELOCITY = 1;
+  private readonly PAUSE_DURATION = 1000; // 1 second pause
 
   gameState$ = new BehaviorSubject<GameState>({
     playerScore: 0,
@@ -29,6 +34,14 @@ export class PongService {
   });
   
   pongState$ = new BehaviorSubject<PongState>('waiting');
+
+  // Add new subject for game end events
+  private gameEnd$ = new Subject<void>();
+  
+  // Add getter for gameEnd observable
+  get onGameEnd() {
+    return this.gameEnd$.asObservable();
+  }
 
   constructor(private p2pService: P2pService) {
     this.p2pService.message$.subscribe(message => {
@@ -47,36 +60,55 @@ export class PongService {
         });
         break;
       case 'gameStart':
-        this.startGame();
+        this.pongState$.next('playing');
+        if (this.isHost) {
+          this.startGameLoop();
+        }
         break;
       case 'ballSync':
         if (!this.isHost) {
+          // Mirror the ball position for client
+          const mirroredBall = {
+            ...message.payload.ball,
+            x: 100 - message.payload.ball.x,  // Mirror X position
+            dx: -message.payload.ball.dx      // Reverse X velocity
+          };
+          
           this.gameState$.next({
             ...currentState,
-            ballPosition: message.payload.ball
+            ballPosition: mirroredBall,
+            playerScore: message.payload.opponentScore,
+            opponentScore: message.payload.playerScore
           });
         }
+        break;
+      case 'gameEnd':
+        this.gameEnd$.next();
+        this.cleanup();
         break;
     }
   }
 
   createGame() {
     this.isHost = true;
-    return this.p2pService.createConnection();
+    this.p2pService.createGame();
   }
 
-  joinGame(connectionString: string) {
-    return this.p2pService.joinConnection(connectionString);
+  joinGame(peerId: string) {
+    this.isHost = false;
+    this.p2pService.joinGame(peerId);
   }
 
   startGame() {
     this.pongState$.next('playing');
+    
+    const message: GameStartMessage = {
+      type: 'gameStart',
+      payload: null
+    };
+    this.p2pService.sendMessage(message);
+    
     if (this.isHost) {
-      const message: GameStartMessage = {
-        type: 'gameStart',
-        payload: null
-      };
-      this.p2pService.sendMessage(message);
       this.startGameLoop();
     }
   }
@@ -101,10 +133,13 @@ export class PongService {
       
       if (this.isHost) {
         this.updateBallPosition();
+        const currentState = this.gameState$.value;
         const message: BallSyncMessage = {
           type: 'ballSync',
           payload: {
-            ball: this.gameState$.value.ballPosition
+            ball: currentState.ballPosition,
+            playerScore: currentState.playerScore,
+            opponentScore: currentState.opponentScore
           }
         };
         this.p2pService.sendMessage(message);
@@ -119,72 +154,145 @@ export class PongService {
   private updateBallPosition() {
     const currentState = this.gameState$.value;
     const newBall = { ...currentState.ballPosition };
+    let { playerScore, opponentScore } = currentState;
     
+    // Don't update ball position if paused
+    if (this.isPaused) {
+      return;
+    }
+
     newBall.x += newBall.dx * this.BALL_SPEED;
     newBall.y += newBall.dy * this.BALL_SPEED;
 
     if (newBall.y <= 0 || newBall.y >= 100) {
       newBall.dy *= -1;
+      newBall.y = newBall.y <= 0 ? 0 : 100;
     }
 
-    const paddleWidth = 2;
-    const paddleHeight = 15;
+    const paddleWidth = 1;
+    const paddleHeight = 20;
+    const ballSize = 2;
 
-    if (newBall.x <= paddleWidth && 
-        newBall.y >= currentState.paddlePosition - paddleHeight/2 && 
-        newBall.y <= currentState.paddlePosition + paddleHeight/2) {
-      newBall.dx *= -1;
-      newBall.x = paddleWidth;
-    }
-
-    if (newBall.x >= 100 - paddleWidth && 
+    // Left (opponent) paddle collision
+    if (newBall.x - ballSize/2 <= paddleWidth && 
         newBall.y >= currentState.opponentPaddlePosition - paddleHeight/2 && 
         newBall.y <= currentState.opponentPaddlePosition + paddleHeight/2) {
-      newBall.dx *= -1;
-      newBall.x = 100 - paddleWidth;
+      const relativeIntersectY = (currentState.opponentPaddlePosition - newBall.y) / (paddleHeight/2);
+      const bounceAngle = relativeIntersectY * 0.75;
+      
+      newBall.dx = Math.abs(newBall.dx);
+      newBall.dy = -bounceAngle * Math.abs(newBall.dx);
+      newBall.x = paddleWidth + ballSize/2;
     }
 
-    let { playerScore, opponentScore } = currentState;
-
-    if (newBall.x <= 0) {
-      opponentScore++;
-      const resetBall = this.resetBall();
-      newBall.x = resetBall.x;
-      newBall.y = resetBall.y;
-      newBall.dx = resetBall.dx;
-      newBall.dy = resetBall.dy;
+    // Right (player) paddle collision
+    if (newBall.x + ballSize/2 >= 100 - paddleWidth && 
+        newBall.y >= currentState.paddlePosition - paddleHeight/2 && 
+        newBall.y <= currentState.paddlePosition + paddleHeight/2) {
+      const relativeIntersectY = (currentState.paddlePosition - newBall.y) / (paddleHeight/2);
+      const bounceAngle = relativeIntersectY * 0.75;
+      
+      newBall.dx = -Math.abs(newBall.dx);
+      newBall.dy = -bounceAngle * Math.abs(newBall.dx);
+      newBall.x = 100 - paddleWidth - ballSize/2;
     }
 
-    if (newBall.x >= 100) {
+    // Scoring with pause
+    if (newBall.x - ballSize/2 <= 0) {
       playerScore++;
-      const resetBall = this.resetBall();
-      newBall.x = resetBall.x;
-      newBall.y = resetBall.y;
-      newBall.dx = resetBall.dx;
-      newBall.dy = resetBall.dy;
+      this.isPaused = true;
+      
+      if (this.pauseTimeout) clearTimeout(this.pauseTimeout);
+      this.pauseTimeout = setTimeout(() => {
+        this.isPaused = false;
+        Object.assign(newBall, this.resetBall());
+        this.gameState$.next({
+          ...this.gameState$.value,
+          ballPosition: newBall,
+          playerScore,
+          opponentScore
+        });
+      }, this.PAUSE_DURATION);
     }
 
-    this.gameState$.next({
-      ...currentState,
-      ballPosition: newBall,
-      playerScore,
-      opponentScore
-    });
+    if (newBall.x + ballSize/2 >= 100) {
+      opponentScore++;
+      this.isPaused = true;
+      
+      if (this.pauseTimeout) clearTimeout(this.pauseTimeout);
+      this.pauseTimeout = setTimeout(() => {
+        this.isPaused = false;
+        Object.assign(newBall, this.resetBall());
+        this.gameState$.next({
+          ...this.gameState$.value,
+          ballPosition: newBall,
+          playerScore,
+          opponentScore
+        });
+      }, this.PAUSE_DURATION);
+    }
+
+    // Only update state and send message if not paused
+    if (!this.isPaused) {
+      this.gameState$.next({
+        ...currentState,
+        ballPosition: newBall,
+        playerScore,
+        opponentScore
+      });
+
+      // Send ball sync message
+      const message: BallSyncMessage = {
+        type: 'ballSync',
+        payload: {
+          ball: newBall,
+          playerScore,
+          opponentScore
+        }
+      };
+      this.p2pService.sendMessage(message);
+    }
   }
 
   private resetBall(): BallState {
     return {
       x: 50,
       y: 50,
-      dx: Math.random() > 0.5 ? 2 : -2,
-      dy: Math.random() > 0.5 ? 2 : -2
+      dx: (Math.random() > 0.5 ? 1 : -1) * this.INITIAL_BALL_VELOCITY,
+      dy: (Math.random() > 0.5 ? 1 : -1) * this.INITIAL_BALL_VELOCITY
     };
   }
 
   cleanup() {
     if (this.gameLoop) {
       cancelAnimationFrame(this.gameLoop);
+      this.gameLoop = null;
     }
+    if (this.pauseTimeout) {
+      clearTimeout(this.pauseTimeout);
+      this.pauseTimeout = null;
+    }
+    this.isPaused = false;
+    
+    // Send cleanup message to other player
+    const message: GameEndMessage = {
+      type: 'gameEnd',
+      payload: null
+    };
+    this.p2pService.sendMessage(message);
+    
+    // Full reset of all states
+    this.isHost = false;
+    this.pongState$.next('waiting');
+    this.gameState$.next({
+      playerScore: 0,
+      opponentScore: 0,
+      ballPosition: { x: 50, y: 50, dx: 2, dy: 2 },
+      paddlePosition: 50,
+      opponentPaddlePosition: 50
+    });
+
+    // Also cleanup P2P connection
     this.p2pService.cleanup();
   }
 } 

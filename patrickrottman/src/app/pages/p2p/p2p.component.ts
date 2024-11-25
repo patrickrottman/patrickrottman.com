@@ -14,6 +14,8 @@ import { Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ConnectionState, GameState, PongState } from '../../interfaces/p2p.interfaces';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { PongGameModalComponent } from '../../components/pong-game-modal/pong-game-modal.component';
 
 interface LogEntry {
   message: string;
@@ -32,7 +34,8 @@ interface LogEntry {
     MatSnackBarModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule
   ],
   templateUrl: './p2p.component.html',
   styleUrl: './p2p.component.scss',
@@ -82,6 +85,10 @@ export class P2pComponent implements OnInit, OnDestroy {
   handleKeyPress(event: KeyboardEvent) {
     if (this.pongState$.value !== 'playing') return;
 
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+    }
+
     const currentState = this.gameState$.value;
     switch (event.key) {
       case 'ArrowUp':
@@ -100,23 +107,30 @@ export class P2pComponent implements OnInit, OnDestroy {
   constructor(
     private p2pService: P2pService,
     private pongService: PongService,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) {
+    this.pongService.pongState$.subscribe(state => {
+      if (state === 'playing' && !this.dialog.openDialogs.length) {
+        this.openGameModal();
+      }
+    });
+  }
 
   ngOnInit() {
     this.gameState$ = this.pongService.gameState$;
     this.connectionState$ = this.p2pService.connectionState$;
     this.pongState$ = this.pongService.pongState$;
 
-    this.p2pService.connectionString$
+    this.p2pService.connectionId$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(str => {
-        if (str && str !== this.lastCopiedString) {
-          this.lastCopiedString = str;
-          this.localConnectionString = str;
+      .subscribe(id => {
+        if (id && id !== this.lastCopiedString) {
+          this.lastCopiedString = id;
+          this.localConnectionString = id;
           if (this.isHost) {
-            navigator.clipboard.writeText(str);
-            this.snackBar.open('Connection code copied to clipboard!', 'Close', { duration: 3000 });
+            navigator.clipboard.writeText(id);
+            this.snackBar.open('Connection ID copied to clipboard!', 'Close', { duration: 3000 });
           }
         }
       });
@@ -153,16 +167,9 @@ export class P2pComponent implements OnInit, OnDestroy {
     this.remoteConnectionString = '';
   }
 
-  async handleRemoteConnection() {
-    if (this.localConnectionString && this.remoteConnectionString) {
-      await this.p2pService.handleAnswer(this.remoteConnectionString);
-      this.remoteConnectionString = '';
-    }
-  }
-
   copyConnectionString() {
     navigator.clipboard.writeText(this.localConnectionString);
-    this.snackBar.open('Connection string copied!', 'Close', { duration: 2000 });
+    this.snackBar.open('Connection ID copied!', 'Close', { duration: 2000 });
   }
 
   startGame() {
@@ -180,5 +187,39 @@ export class P2pComponent implements OnInit, OnDestroy {
       type,
       timestamp: new Date()
     }, ...this.connectionLogs].slice(0, 50);
+  }
+
+  private openGameModal() {
+    const dialogRef = this.dialog.open(PongGameModalComponent, {
+      width: '90vw',
+      maxWidth: '1000px',
+      height: '80vh',
+      panelClass: 'game-dialog',
+      disableClose: true,
+      autoFocus: false,
+      restoreFocus: false,
+      ariaLabel: 'Pong Game',
+      role: 'dialog'
+    });
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.pongService.cleanup();
+      
+      // Full reset of component state
+      this.isHost = false;
+      this.localConnectionString = '';
+      this.remoteConnectionString = '';
+      this.connectionLogs = [];
+      this.lastCopiedString = '';
+      
+      setTimeout(() => {
+        this.pongState$.next('waiting');
+        this.connectionState$.next('disconnected');
+      });
+    });
   }
 } 

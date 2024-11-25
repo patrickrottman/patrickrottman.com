@@ -36,3 +36,47 @@ body {
   direction: ltr;
   -webkit-font-smoothing: antialiased;
 }
+
+.game-dialog {
+  .mat-mdc-dialog-container {
+    padding: 0;
+    
+    .mdc-dialog__surface {
+      background: transparent !important;
+      box-shadow: none !important;
+      overflow: visible !important;
+      border-radius: 8px !important;
+      position: relative !important;
+      z-index: 1000 !important;
+      outline: none !important;
+    }
+    
+    .mdc-dialog__content {
+      padding: 0;
+      background: transparent;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      outline: none !important;
+    }
+  }
+
+  // Add overlay styling
+  .mat-dialog-container {
+    background: rgba(0, 0, 0, 0.85);
+    box-shadow: none;
+    outline: none !important;
+  }
+
+  // Add focus styles
+  *:focus {
+    outline: none !important;
+  }
+
+  // Remove aria-hidden from root
+  app-root[aria-hidden="true"] {
+    aria-hidden: false !important;
+  }
+}

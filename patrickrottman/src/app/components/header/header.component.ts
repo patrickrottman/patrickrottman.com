@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { ThemeService } from '../../services/theme.service';
 import { ViewportScroller } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +16,8 @@ import { Router } from '@angular/router';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    MatMenuModule
+    MatMenuModule,
+    RouterModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
