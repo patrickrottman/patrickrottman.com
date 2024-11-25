@@ -1,0 +1,120 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.game-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 1rem;
+  position: relative;
+  z-index: 1000;
+}
+
+.game-board {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  aspect-ratio: 4/3;
+  max-width: 800px;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #000;
+}
+
+.game-canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.paddle {
+  position: absolute;
+  width: 1%;
+  height: 20%;
+  background: white !important;
+  transform: translateY(-50%);
+  
+  &.player {
+    right: 1%;
+    cursor: grab;
+    transition: transform 0.1s;
+
+    &:active {
+      cursor: grabbing;
+      transform: translateY(-50%) scale(1.2);
+    }
+  }
+  
+  &.opponent {
+    left: 1%;
+  }
+}
+
+.ball {
+  position: absolute;
+  width: 2%;
+  aspect-ratio: 1;
+  background: white !important;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.score {
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  color: white;
+  font-size: 1.5rem;
+  z-index: 1;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.instructions {
+  position: absolute;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: white;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1001;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+} 

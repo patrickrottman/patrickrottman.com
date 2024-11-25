@@ -1,0 +1,25 @@
+<div class="game-container">
+  <button class="close-button" (click)="closeGame()">
+    <mat-icon>close</mat-icon>
+  </button>
+  
+  <div class="game-board" *ngIf="gameState$ | async as game">
+    <div class="score">
+      <span>You: {{game.playerScore}}</span>
+      <span>Opponent: {{game.opponentScore}}</span>
+    </div>
+    <div class="game-canvas">
+      <div class="paddle opponent" [style.top.%]="game.opponentPaddlePosition"></div>
+      <div class="ball" 
+           [style.left.%]="game.ballPosition.x" 
+           [style.top.%]="game.ballPosition.y"></div>
+      <div class="paddle player" 
+           [style.top.%]="game.paddlePosition"
+           (mousedown)="onPaddleMouseDown($event)"
+           (touchstart)="onPaddleTouchStart($event)"></div>
+    </div>
+    <div class="instructions">
+      Use ↑ and ↓ arrow keys or drag paddle to play | ESC or × to quit
+    </div>
+  </div>
+</div> 

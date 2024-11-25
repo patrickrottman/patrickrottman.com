@@ -3,24 +3,18 @@
     <mat-card class="description-card">
       <mat-card-header>
         <mat-card-title>Peer-to-Peer Ping Pong</mat-card-title>
-        <mat-card-subtitle>A WebRTC Experiment in Browser-to-Browser Gaming</mat-card-subtitle>
+        <mat-card-subtitle>Direct Browser-to-Browser Gaming</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <p>
-          This project explores the boundaries of what's possible in modern web browsers without a backend server. 
-          Using WebRTC (Web Real-Time Communication), we can establish direct peer-to-peer connections between browsers, 
-          enabling real-time multiplayer gaming with minimal latency.
+          Challenge your friends to a game of Pong that runs directly between browsers - no servers needed! 
+          Using WebRTC and PeerJS, your browser establishes a direct peer-to-peer connection with your opponent, 
+          exchanging paddle movements and ball physics in real-time.
         </p>
-        <h3>Technical Stack:</h3>
-        <ul>
-          <li><strong>WebRTC</strong> - For direct peer-to-peer communication</li>
-          <li><strong>Angular 19</strong> - Latest version with enhanced performance</li>
-          <li><strong>RxJS</strong> - For reactive state management</li>
-        </ul>
         <p>
-          While WebRTC typically requires a signaling server for initial connection setup, 
-          we work around this by having players manually exchange connection strings. 
-          This approach, while less user-friendly, demonstrates the possibility of truly serverless multiplayer gaming.
+          When you create a game, your browser generates a unique WebRTC connection code containing everything 
+          needed to establish a secure, low-latency link. Share this code with a friend, and watch as your browsers 
+          connect directly to each other for some classic Pong action!
         </p>
       </mat-card-content>
     </mat-card>
@@ -87,13 +81,22 @@
 
         <div class="game-lobby" *ngIf="connectionState === 'connected'">
           <h2>Connected!</h2>
+          <div class="game-instructions">
+            <h3>How to Play</h3>
+            <ul>
+              <li>Use <strong>↑</strong> and <strong>↓</strong> arrow keys to move your paddle</li>
+              <li>Keep the ball from getting past your paddle</li>
+              <li>Score points when the ball gets past your opponent's paddle</li>
+              <li>First to 10 points wins!</li>
+            </ul>
+          </div>
           <button mat-raised-button color="primary" (click)="startGame()">
             Start Game
           </button>
         </div>
       </ng-container>
 
-      <div class="connection-logs" *ngIf="connectionLogs.length">
+      <div class="connection-logs" *ngIf="connectionLogs.length && (pongState$ | async) !== 'playing'">
         <h3>Connection Status</h3>
         <div class="log-entries">
           <div *ngFor="let log of connectionLogs" 
@@ -105,15 +108,17 @@
         </div>
       </div>
 
-      <ng-container *ngIf="(pongState$ | async) === 'playing'">
-        <div class="game-board" *ngIf="gameState$ | async as game">
+      <ng-container *ngIf="(pongState$ | async) === 'playing' && (gameState$ | async) as game">
+        <div class="game-board">
           <div class="score">
             <span>You: {{game.playerScore}}</span>
             <span>Opponent: {{game.opponentScore}}</span>
           </div>
           <div class="game-canvas">
             <div class="paddle player" [style.top.%]="game.paddlePosition"></div>
-            <div class="ball" [style.left.%]="game.ballPosition.x" [style.top.%]="game.ballPosition.y"></div>
+            <div class="ball" 
+                 [style.left.%]="game.ballPosition.x" 
+                 [style.top.%]="game.ballPosition.y"></div>
             <div class="paddle opponent" [style.top.%]="game.opponentPaddlePosition"></div>
           </div>
           <div class="instructions">

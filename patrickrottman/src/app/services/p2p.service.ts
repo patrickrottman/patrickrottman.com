@@ -3,6 +3,16 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { Peer, DataConnection } from 'peerjs';
 import { ConnectionState, GameMessage } from '../interfaces/p2p.interfaces';
 
+interface PingMessage {
+  type: 'ping';
+}
+
+interface PongMessage {
+  type: 'pong';
+}
+
+type ConnectionMessage = PingMessage | PongMessage | GameMessage;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,18 +31,7 @@ export class P2pService {
       this.status$.next('Initializing peer connection...');
       const peerId = crypto.randomUUID();
       
-      this.peer = new Peer(peerId, {
-        host: '0.peerjs.com',
-        secure: true,
-        port: 443,
-        debug: 3,
-        config: {
-          iceServers: [
-            { urls: 'stun:stun.l.google.com:19302' },
-            { urls: 'stun:stun1.l.google.com:19302' }
-          ]
-        }
-      });
+      this.peer = new Peer(peerId);
 
       this.peer.on('open', (id) => {
         this.status$.next(`Peer initialized with ID: ${id}`);
@@ -44,13 +43,9 @@ export class P2pService {
         this.handleConnection(conn);
       });
 
-      this.peer.on('disconnected', () => {
-        this.status$.next('Peer disconnected - attempting to reconnect...');
-        this.peer?.reconnect();
-      });
-
       this.peer.on('error', (error) => {
-        this.error$.next(`Peer error: ${error.type} - ${error.message}`);
+        this.status$.next(`Peer error type: ${error.type}`);
+        this.error$.next(`Connection error: ${error.message}`);
         this.connectionState$.next('disconnected');
       });
 
@@ -63,16 +58,31 @@ export class P2pService {
   private handleConnection(conn: DataConnection) {
     this.connection = conn;
     this.connectionState$.next('connecting');
+    this.status$.next(`Setting up connection with: ${conn.peer}`);
 
     conn.on('open', () => {
-      this.status$.next(`Connection established (${conn.peer})`);
+      this.status$.next(`Connection opened with: ${conn.peer}`);
       this.connectionState$.next('connected');
+      
+      // Send initial ping
+      conn.send({ type: 'ping' } as PingMessage);
     });
 
-    conn.on('data', (data) => {
+    conn.on('data', (data: unknown) => {
       try {
-        this.status$.next(`Received message: ${JSON.stringify(data)}`);
-        this.message$.next(data as GameMessage);
+        const message = data as ConnectionMessage;
+        
+        if (message.type === 'ping') {
+          conn.send({ type: 'pong' } as PongMessage);
+          return;
+        }
+        if (message.type === 'pong') {
+          this.status$.next('Connection verified with pong');
+          return;
+        }
+        
+        this.status$.next(`Received message: ${JSON.stringify(message)}`);
+        this.message$.next(message as GameMessage);
       } catch (error) {
         this.error$.next('Invalid message format');
       }
@@ -84,7 +94,7 @@ export class P2pService {
     });
 
     conn.on('error', (error) => {
-      this.error$.next(`Connection error: ${error.message}`);
+      this.error$.next(`Connection error: ${error}`);
       this.connectionState$.next('disconnected');
     });
   }
@@ -103,13 +113,13 @@ export class P2pService {
       this.status$.next('Joining game...');
       this.initializePeer();
 
-      let peerReadyAttempts = 0;
-      const maxAttempts = 30; // 3 seconds total
-
-      // Wait for our peer to be ready
+      // Wait for our peer to be ready before connecting
+      let attempts = 0;
+      const maxAttempts = 10;
+      
       const waitForPeer = setInterval(() => {
-        peerReadyAttempts++;
-        this.status$.next(`Waiting for peer initialization... (${peerReadyAttempts}/${maxAttempts})`);
+        attempts++;
+        this.status$.next(`Waiting for peer initialization... (${attempts}/${maxAttempts})`);
 
         if (this.peer?.id) {
           clearInterval(waitForPeer);
@@ -120,36 +130,14 @@ export class P2pService {
             serialization: 'json'
           });
 
-          this.status$.next('Connection attempt started...');
-
-          conn.on('open', () => {
-            this.status$.next('Connection opened to host');
-            this.handleConnection(conn);
-          });
-
-          conn.on('error', (err) => {
-            this.error$.next(`Connection error: ${err.message}`);
-            this.connectionState$.next('disconnected');
-          });
-        } else if (peerReadyAttempts >= maxAttempts) {
+          this.status$.next('Connection attempt started');
+          this.handleConnection(conn);
+        } else if (attempts >= maxAttempts) {
           clearInterval(waitForPeer);
-          this.error$.next('Peer initialization timed out');
+          this.error$.next('Failed to initialize peer connection');
           this.connectionState$.next('disconnected');
         }
-      }, 100);
-
-      // Increase timeout to 30 seconds
-      setTimeout(() => {
-        clearInterval(waitForPeer);
-        if (this.connectionState$.value !== 'connected') {
-          this.error$.next('Connection attempt timed out. Possible issues:\n' + 
-            '1. Invalid peer ID\n' + 
-            '2. Host disconnected\n' + 
-            '3. Network connectivity issues');
-          this.connectionState$.next('disconnected');
-          this.cleanup();
-        }
-      }, 30000);
+      }, 1000);
 
     } catch (error) {
       this.error$.next(`Failed to join game: ${error}`);

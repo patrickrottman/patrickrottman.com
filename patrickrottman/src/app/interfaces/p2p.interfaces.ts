@@ -19,6 +19,8 @@ export interface BallSyncMessage extends P2PMessage {
   type: 'ballSync';
   payload: {
     ball: BallState;
+    playerScore: number;
+    opponentScore: number;
   };
 }
 
@@ -40,4 +42,9 @@ export interface GameState {
 export type ConnectionState = 'disconnected' | 'connecting' | 'connected';
 export type PongState = 'waiting' | 'playing';
 
-export type GameMessage = PaddleMoveMessage | GameStartMessage | BallSyncMessage; 
+export interface GameEndMessage extends P2PMessage {
+  type: 'gameEnd';
+  payload: null;
+}
+
+export type GameMessage = PaddleMoveMessage | GameStartMessage | BallSyncMessage | GameEndMessage; 
