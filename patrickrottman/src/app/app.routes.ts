@@ -13,5 +13,11 @@ export const routes: Routes = [
       .then(m => m.BlogComponent),
     title: 'Blog - Patrick Rottman'
   },
+  { 
+    path: 'p2p', 
+    loadComponent: () => import('./pages/p2p/p2p.component')
+      .then(m => m.P2pComponent),
+    title: 'P2P Ping Pong'
+  },
   { path: '**', redirectTo: '' }
 ];

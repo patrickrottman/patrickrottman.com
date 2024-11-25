@@ -1,0 +1,143 @@
+<div class="p2p-container">
+  <div class="description-wrapper" [@slideUp]="(connectionState$ | async) === 'disconnected' ? 'visible' : 'hidden'">
+    <mat-card class="description-card">
+      <mat-card-header>
+        <mat-card-title>Peer-to-Peer Ping Pong</mat-card-title>
+        <mat-card-subtitle>A WebRTC Experiment in Browser-to-Browser Gaming</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          This project explores the boundaries of what's possible in modern web browsers without a backend server. 
+          Using WebRTC (Web Real-Time Communication), we can establish direct peer-to-peer connections between browsers, 
+          enabling real-time multiplayer gaming with minimal latency.
+        </p>
+        <h3>Technical Stack:</h3>
+        <ul>
+          <li><strong>WebRTC</strong> - For direct peer-to-peer communication</li>
+          <li><strong>Angular 19</strong> - Latest version with enhanced performance</li>
+          <li><strong>RxJS</strong> - For reactive state management</li>
+        </ul>
+        <p>
+          While WebRTC typically requires a signaling server for initial connection setup, 
+          we work around this by having players manually exchange connection strings. 
+          This approach, while less user-friendly, demonstrates the possibility of truly serverless multiplayer gaming.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="game-card">
+    <mat-card-header>
+      <mat-card-title>Game Setup</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <ng-container *ngIf="connectionState$ | async as connectionState">
+        <div class="connection-setup" *ngIf="connectionState === 'disconnected'">
+          <div *ngIf="!localConnectionString">
+            <button mat-raised-button color="primary" (click)="createGame()">
+              Create New Game (Host)
+            </button>
+          </div>
+
+          <div *ngIf="localConnectionString && isHost" class="connection-info">
+            <h3>Host Steps:</h3>
+            <ol>
+              <li>Your host code has been copied to clipboard</li>
+              <li>Share this code with the other player</li>
+              <li>Wait for their answer code</li>
+              <li>Paste their answer code below:</li>
+            </ol>
+            
+            <button mat-raised-button (click)="copyConnectionString()">
+              <mat-icon>content_copy</mat-icon> Copy Host Code Again
+            </button>
+
+            <div class="answer-section">
+              <mat-form-field class="full-width">
+                <mat-label>Paste Their Answer Code Here</mat-label>
+                <textarea matInput [(ngModel)]="remoteConnectionString" 
+                          placeholder="Paste the code they send back to you"></textarea>
+              </mat-form-field>
+              <button mat-raised-button color="primary" 
+                      [disabled]="!remoteConnectionString" 
+                      (click)="handleRemoteConnection()">
+                Complete Connection
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="!localConnectionString && !isHost" class="join-game">
+            <h3>Join Existing Game:</h3>
+            <ol>
+              <li>Get the host code from the other player</li>
+              <li>Paste it below</li>
+              <li>Click Join Game</li>
+              <li>Share your answer code back with the host</li>
+            </ol>
+            
+            <mat-form-field class="full-width">
+              <mat-label>Paste Host's Code Here</mat-label>
+              <textarea matInput [(ngModel)]="remoteConnectionString" placeholder="Paste the code they shared with you"></textarea>
+            </mat-form-field>
+            <button mat-raised-button color="accent" (click)="joinGame()">
+              Join Game
+            </button>
+          </div>
+
+          <div *ngIf="localConnectionString && !isHost" class="connection-info">
+            <h3>Almost there!</h3>
+            <p>Your answer code has been copied to clipboard</p>
+            <mat-form-field class="full-width">
+              <mat-label>Your Answer Code (Share this with host)</mat-label>
+              <textarea matInput [value]="localConnectionString" readonly></textarea>
+            </mat-form-field>
+            <button mat-raised-button (click)="copyConnectionString()">
+              <mat-icon>content_copy</mat-icon> Copy Answer Code Again
+            </button>
+          </div>
+        </div>
+
+        <div class="connecting" *ngIf="connectionState === 'connecting'">
+          <mat-spinner diameter="50"></mat-spinner>
+        </div>
+
+        <div class="game-lobby" *ngIf="connectionState === 'connected'">
+          <h2>Connected to peer!</h2>
+          <button mat-raised-button color="primary" (click)="startGame()">
+            Start Game
+          </button>
+        </div>
+      </ng-container>
+
+      <div class="connection-logs">
+        <h3>Connection Log</h3>
+        <div class="log-entries">
+          <div *ngFor="let log of connectionLogs" 
+               class="log-entry"
+               [class.error]="log.type === 'error'">
+            <span class="log-time">{{ log.timestamp | date:'HH:mm:ss' }}</span>
+            <span class="log-message">{{ log.message }}</span>
+          </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="(pongState$ | async) === 'playing'">
+        <div class="game-board" *ngIf="gameState$ | async as game">
+          <div class="score">
+            <span>You: {{game.playerScore}}</span>
+            <span>Opponent: {{game.opponentScore}}</span>
+          </div>
+          <div class="game-canvas">
+            <div class="paddle player" [style.top.%]="game.paddlePosition"></div>
+            <div class="ball" [style.left.%]="game.ballPosition.x" [style.top.%]="game.ballPosition.y"></div>
+            <div class="paddle opponent" [style.top.%]="game.opponentPaddlePosition"></div>
+          </div>
+          <div class="instructions">
+            Use ↑ and ↓ arrow keys to move your paddle
+          </div>
+        </div>
+      </ng-container>
+    </mat-card-content>
+  </mat-card>
+</div> 
