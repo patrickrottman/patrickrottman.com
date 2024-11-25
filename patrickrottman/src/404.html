@@ -3,9 +3,11 @@
   <head>
     <script>
       const path = window.location.pathname;
-      const segment = path.split('/').pop();
+      const baseHref = path.includes('/pr-') ? path.split('/').slice(0, 2).join('/') : '';
+      const segment = path.split('/').slice(2).join('/');
       localStorage.setItem('path', segment);
-      window.location.href = '/';
+      localStorage.setItem('baseHref', baseHref);
+      window.location.href = baseHref || '/';
     </script>
   </head>
 </html> 
