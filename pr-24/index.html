@@ -11,9 +11,11 @@
   <script>
     (function() {
       const redirect = localStorage.getItem('path');
+      const baseHref = localStorage.getItem('baseHref');
       if (redirect && redirect !== 'index.html') {
         localStorage.removeItem('path');
-        window.location.href = '/' + redirect;
+        localStorage.removeItem('baseHref');
+        window.location.href = (baseHref || '') + '/' + redirect;
       }
     })();
   </script>
