@@ -34,7 +34,6 @@ jobs:
           else
             npm run build -- --configuration production --base-href "/"
           fi
-          cp src/404.html dist/patrickrottman/browser/404.html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
