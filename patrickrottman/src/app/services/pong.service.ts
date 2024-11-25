@@ -18,9 +18,12 @@ import {
 export class PongService {
   private gameLoop: number | null = null;
   private isHost = false;
+  private isPaused = false;
+  private pauseTimeout: any = null;
 
   private readonly BALL_SPEED = 0.3;
   private readonly INITIAL_BALL_VELOCITY = 1;
+  private readonly PAUSE_DURATION = 1000; // 1 second pause
 
   gameState$ = new BehaviorSubject<GameState>({
     playerScore: 0,
@@ -153,6 +156,11 @@ export class PongService {
     const newBall = { ...currentState.ballPosition };
     let { playerScore, opponentScore } = currentState;
     
+    // Don't update ball position if paused
+    if (this.isPaused) {
+      return;
+    }
+
     newBall.x += newBall.dx * this.BALL_SPEED;
     newBall.y += newBall.dy * this.BALL_SPEED;
 
@@ -165,6 +173,7 @@ export class PongService {
     const paddleHeight = 20;
     const ballSize = 2;
 
+    // Left (opponent) paddle collision
     if (newBall.x - ballSize/2 <= paddleWidth && 
         newBall.y >= currentState.opponentPaddlePosition - paddleHeight/2 && 
         newBall.y <= currentState.opponentPaddlePosition + paddleHeight/2) {
@@ -176,6 +185,7 @@ export class PongService {
       newBall.x = paddleWidth + ballSize/2;
     }
 
+    // Right (player) paddle collision
     if (newBall.x + ballSize/2 >= 100 - paddleWidth && 
         newBall.y >= currentState.paddlePosition - paddleHeight/2 && 
         newBall.y <= currentState.paddlePosition + paddleHeight/2) {
@@ -187,32 +197,61 @@ export class PongService {
       newBall.x = 100 - paddleWidth - ballSize/2;
     }
 
+    // Scoring with pause
     if (newBall.x - ballSize/2 <= 0) {
       playerScore++;
-      Object.assign(newBall, this.resetBall());
+      this.isPaused = true;
+      
+      if (this.pauseTimeout) clearTimeout(this.pauseTimeout);
+      this.pauseTimeout = setTimeout(() => {
+        this.isPaused = false;
+        Object.assign(newBall, this.resetBall());
+        this.gameState$.next({
+          ...this.gameState$.value,
+          ballPosition: newBall,
+          playerScore,
+          opponentScore
+        });
+      }, this.PAUSE_DURATION);
     }
 
     if (newBall.x + ballSize/2 >= 100) {
       opponentScore++;
-      Object.assign(newBall, this.resetBall());
+      this.isPaused = true;
+      
+      if (this.pauseTimeout) clearTimeout(this.pauseTimeout);
+      this.pauseTimeout = setTimeout(() => {
+        this.isPaused = false;
+        Object.assign(newBall, this.resetBall());
+        this.gameState$.next({
+          ...this.gameState$.value,
+          ballPosition: newBall,
+          playerScore,
+          opponentScore
+        });
+      }, this.PAUSE_DURATION);
     }
 
-    this.gameState$.next({
-      ...currentState,
-      ballPosition: newBall,
-      playerScore,
-      opponentScore
-    });
-
-    const message: BallSyncMessage = {
-      type: 'ballSync',
-      payload: {
-        ball: newBall,
+    // Only update state and send message if not paused
+    if (!this.isPaused) {
+      this.gameState$.next({
+        ...currentState,
+        ballPosition: newBall,
         playerScore,
         opponentScore
-      }
-    };
-    this.p2pService.sendMessage(message);
+      });
+
+      // Send ball sync message
+      const message: BallSyncMessage = {
+        type: 'ballSync',
+        payload: {
+          ball: newBall,
+          playerScore,
+          opponentScore
+        }
+      };
+      this.p2pService.sendMessage(message);
+    }
   }
 
   private resetBall(): BallState {
@@ -229,6 +268,11 @@ export class PongService {
       cancelAnimationFrame(this.gameLoop);
       this.gameLoop = null;
     }
+    if (this.pauseTimeout) {
+      clearTimeout(this.pauseTimeout);
+      this.pauseTimeout = null;
+    }
+    this.isPaused = false;
     
     // Send cleanup message to other player
     const message: GameEndMessage = {
