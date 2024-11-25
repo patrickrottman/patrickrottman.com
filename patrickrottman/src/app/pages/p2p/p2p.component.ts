@@ -108,15 +108,15 @@ export class P2pComponent implements OnInit, OnDestroy {
     this.connectionState$ = this.p2pService.connectionState$;
     this.pongState$ = this.pongService.pongState$;
 
-    this.p2pService.connectionString$
+    this.p2pService.connectionId$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(str => {
-        if (str && str !== this.lastCopiedString) {
-          this.lastCopiedString = str;
-          this.localConnectionString = str;
+      .subscribe(id => {
+        if (id && id !== this.lastCopiedString) {
+          this.lastCopiedString = id;
+          this.localConnectionString = id;
           if (this.isHost) {
-            navigator.clipboard.writeText(str);
-            this.snackBar.open('Connection code copied to clipboard!', 'Close', { duration: 3000 });
+            navigator.clipboard.writeText(id);
+            this.snackBar.open('Connection ID copied to clipboard!', 'Close', { duration: 3000 });
           }
         }
       });
@@ -153,16 +153,9 @@ export class P2pComponent implements OnInit, OnDestroy {
     this.remoteConnectionString = '';
   }
 
-  async handleRemoteConnection() {
-    if (this.localConnectionString && this.remoteConnectionString) {
-      await this.p2pService.handleAnswer(this.remoteConnectionString);
-      this.remoteConnectionString = '';
-    }
-  }
-
   copyConnectionString() {
     navigator.clipboard.writeText(this.localConnectionString);
-    this.snackBar.open('Connection string copied!', 'Close', { duration: 2000 });
+    this.snackBar.open('Connection ID copied!', 'Close', { duration: 2000 });
   }
 
   startGame() {

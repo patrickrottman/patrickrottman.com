@@ -62,11 +62,12 @@ export class PongService {
 
   createGame() {
     this.isHost = true;
-    return this.p2pService.createConnection();
+    this.p2pService.createGame();
   }
 
-  joinGame(connectionString: string) {
-    return this.p2pService.joinConnection(connectionString);
+  joinGame(peerId: string) {
+    this.isHost = false;
+    this.p2pService.joinGame(peerId);
   }
 
   startGame() {

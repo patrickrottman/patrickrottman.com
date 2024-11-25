@@ -1,5 +1,5 @@
 <div class="p2p-container">
-  <div class="description-wrapper" [@slideUp]="(connectionState$ | async) === 'disconnected' ? 'visible' : 'hidden'">
+  <div class="description-wrapper" [@slideUp]="(connectionState$ | async) === 'disconnected' && !localConnectionString ? 'visible' : 'hidden'">
     <mat-card class="description-card">
       <mat-card-header>
         <mat-card-title>Peer-to-Peer Ping Pong</mat-card-title>
@@ -27,91 +27,74 @@
   </div>
 
   <mat-card class="game-card">
-    <mat-card-header>
-      <mat-card-title>Game Setup</mat-card-title>
-    </mat-card-header>
-    
     <mat-card-content>
       <ng-container *ngIf="connectionState$ | async as connectionState">
         <div class="connection-setup" *ngIf="connectionState === 'disconnected'">
-          <div *ngIf="!localConnectionString">
-            <button mat-raised-button color="primary" (click)="createGame()">
-              Create New Game (Host)
-            </button>
-          </div>
-
-          <div *ngIf="localConnectionString && isHost" class="connection-info">
-            <h3>Host Steps:</h3>
-            <ol>
-              <li>Your host code has been copied to clipboard</li>
-              <li>Share this code with the other player</li>
-              <li>Wait for their answer code</li>
-              <li>Paste their answer code below:</li>
-            </ol>
+          <div *ngIf="!localConnectionString" class="connection-choice">
+            <h2>Choose Your Role</h2>
             
-            <button mat-raised-button (click)="copyConnectionString()">
-              <mat-icon>content_copy</mat-icon> Copy Host Code Again
-            </button>
+            <div class="choice-cards">
+              <mat-card class="choice-card host" (click)="createGame()">
+                <mat-icon>sports_esports</mat-icon>
+                <h3>Host Game</h3>
+                <p>Create a new game and invite a friend</p>
+              </mat-card>
 
-            <div class="answer-section">
-              <mat-form-field class="full-width">
-                <mat-label>Paste Their Answer Code Here</mat-label>
-                <textarea matInput [(ngModel)]="remoteConnectionString" 
-                          placeholder="Paste the code they send back to you"></textarea>
-              </mat-form-field>
-              <button mat-raised-button color="primary" 
-                      [disabled]="!remoteConnectionString" 
-                      (click)="handleRemoteConnection()">
-                Complete Connection
-              </button>
+              <div class="separator">
+                <span>or</span>
+              </div>
+
+              <mat-card class="choice-card join">
+                <mat-icon>group_add</mat-icon>
+                <h3>Join Game</h3>
+                <div class="join-form">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Game ID</mat-label>
+                    <input matInput [(ngModel)]="remoteConnectionString" 
+                           placeholder="Paste the game ID here">
+                    <mat-hint>Get this ID from the game host</mat-hint>
+                  </mat-form-field>
+                  <button mat-raised-button color="accent" 
+                          [disabled]="!remoteConnectionString"
+                          (click)="joinGame()">
+                    Join Game
+                  </button>
+                </div>
+              </mat-card>
             </div>
           </div>
 
-          <div *ngIf="!localConnectionString && !isHost" class="join-game">
-            <h3>Join Existing Game:</h3>
-            <ol>
-              <li>Get the host code from the other player</li>
-              <li>Paste it below</li>
-              <li>Click Join Game</li>
-              <li>Share your answer code back with the host</li>
-            </ol>
-            
-            <mat-form-field class="full-width">
-              <mat-label>Paste Host's Code Here</mat-label>
-              <textarea matInput [(ngModel)]="remoteConnectionString" placeholder="Paste the code they shared with you"></textarea>
-            </mat-form-field>
-            <button mat-raised-button color="accent" (click)="joinGame()">
-              Join Game
-            </button>
-          </div>
-
-          <div *ngIf="localConnectionString && !isHost" class="connection-info">
-            <h3>Almost there!</h3>
-            <p>Your answer code has been copied to clipboard</p>
-            <mat-form-field class="full-width">
-              <mat-label>Your Answer Code (Share this with host)</mat-label>
-              <textarea matInput [value]="localConnectionString" readonly></textarea>
-            </mat-form-field>
-            <button mat-raised-button (click)="copyConnectionString()">
-              <mat-icon>content_copy</mat-icon> Copy Answer Code Again
-            </button>
+          <div *ngIf="localConnectionString && isHost" class="host-view">
+            <h2>Game Created!</h2>
+            <div class="game-id-section">
+              <h3>Share this Game ID</h3>
+              <div class="connection-id">{{ localConnectionString }}</div>
+              <button mat-raised-button color="primary" (click)="copyConnectionString()">
+                <mat-icon>content_copy</mat-icon> Copy Game ID
+              </button>
+            </div>
+            <div class="waiting-text">
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>Waiting for player to join...</span>
+            </div>
           </div>
         </div>
 
         <div class="connecting" *ngIf="connectionState === 'connecting'">
           <mat-spinner diameter="50"></mat-spinner>
+          <p>{{ connectionStatus }}</p>
         </div>
 
         <div class="game-lobby" *ngIf="connectionState === 'connected'">
-          <h2>Connected to peer!</h2>
+          <h2>Connected!</h2>
           <button mat-raised-button color="primary" (click)="startGame()">
             Start Game
           </button>
         </div>
       </ng-container>
 
-      <div class="connection-logs">
-        <h3>Connection Log</h3>
+      <div class="connection-logs" *ngIf="connectionLogs.length">
+        <h3>Connection Status</h3>
         <div class="log-entries">
           <div *ngFor="let log of connectionLogs" 
                class="log-entry"
