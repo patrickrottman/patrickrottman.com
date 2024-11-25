@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      const path = window.location.pathname;
+      const segment = path.split('/').pop();
+      localStorage.setItem('path', segment);
+      window.location.href = '/';
+    </script>
+  </head>
+</html> 

@@ -8,6 +8,15 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    (function() {
+      const redirect = localStorage.getItem('path');
+      if (redirect && redirect !== 'index.html') {
+        localStorage.removeItem('path');
+        window.location.href = '/' + redirect;
+      }
+    })();
+  </script>
 </head>
 <body>
   <app-root></app-root>
