@@ -12,6 +12,12 @@ import { MatCardModule } from '@angular/material/card';
 })
 export class SkillsComponent {
   skills = [
+    { icon: 'extension', name: 'MCP Engineering' },
+    { icon: 'hub', name: 'Agent Orchestration' },
+    { icon: 'psychology', name: 'LLM Integration' },
+    { icon: 'smart_toy', name: 'AI/ML' },
+    { icon: 'architecture', name: 'Prompt Engineering' },
+    { icon: 'category', name: 'RAG Systems' },
     { icon: 'code', name: 'C#' },
     { icon: 'code', name: 'TypeScript' },
     { icon: 'javascript', name: 'JavaScript' },

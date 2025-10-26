@@ -1,7 +1,10 @@
-<mat-toolbar class="header">
+<mat-toolbar class="header" [class.scrolled]="isScrolled">
   <div class="header-content">
-    <div class="profile-image" (click)="navigateHome()" role="button" tabindex="0"></div>
-    
+    <div class="profile-section" (click)="navigateHome()" role="button" tabindex="0">
+      <div class="profile-image"></div>
+      <span class="profile-name" [class.visible]="isScrolled">Patrick Rottman</span>
+    </div>
+
     <div class="nav-links">
       <a mat-button (click)="scrollToSection('summary')">Summary</a>
       <a mat-button (click)="scrollToSection('experience')">Experience</a>

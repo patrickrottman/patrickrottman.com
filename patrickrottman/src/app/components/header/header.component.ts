@@ -23,11 +23,23 @@ import { Router, RouterModule } from '@angular/router';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  isScrolled = false;
+
   constructor(
     public themeService: ThemeService,
     private viewportScroller: ViewportScroller,
     private router: Router
-  ) {}
+  ) {
+    this.setupScrollListener();
+  }
+
+  private setupScrollListener(): void {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', () => {
+        this.isScrolled = window.scrollY > 100;
+      });
+    }
+  }
 
   scrollToSection(elementId: string): void {
     if (this.router.url !== '/') {

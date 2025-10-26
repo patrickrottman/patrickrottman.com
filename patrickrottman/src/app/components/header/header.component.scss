@@ -20,18 +20,46 @@
     margin: 0 auto;
   }
 
-  .profile-image {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-image: url('https://ca.slack-edge.com/T03SGJX1Q-U03F84DFM7Y-1a85a174f606-512');
-    background-size: cover;
-    background-position: center;
+  .profile-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     cursor: pointer;
     transition: transform 0.2s ease;
 
     &:hover {
-      transform: scale(1.05);
+      .profile-image {
+        transform: scale(1.05);
+      }
+    }
+
+    .profile-image {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-image: url('https://ca.slack-edge.com/T03SGJX1Q-U03F84DFM7Y-1a85a174f606-512');
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .profile-name {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-color);
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      max-width: 0;
+      overflow: hidden;
+
+      &.visible {
+        opacity: 1;
+        transform: translateX(0);
+        max-width: 200px;
+      }
     }
   }
 
