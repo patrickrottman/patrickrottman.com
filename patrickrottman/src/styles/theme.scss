@@ -21,9 +21,17 @@
   --primary-color: #515154;
   --secondary-color: #86868b;
   --accent-color: #0071e3;
-  --background-color: #fff;
+  --background-color: #f8f9fa;
   --text-color: #515154;
-  --card-bg: #f5f5f7;
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-bg-hover: rgba(255, 255, 255, 0.85);
+
+  // Glassmorphism effects
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --glass-shadow: rgba(0, 0, 0, 0.1);
+  --blur-amount: 40px;
+  --glow-color: rgba(0, 113, 227, 0.3);
 
   // Material theme colors
   --mat-primary: #0071e3;
@@ -40,9 +48,17 @@
   --primary-color: #f5f5f7;
   --secondary-color: #a1a1a6;
   --accent-color: #2997ff;
-  --background-color: #1d1d1f;
+  --background-color: #0a0a0b;
   --text-color: #f5f5f7;
-  --card-bg: #2c2c2e;
+  --card-bg: rgba(44, 44, 46, 0.7);
+  --card-bg-hover: rgba(44, 44, 46, 0.85);
+
+  // Glassmorphism effects for dark mode
+  --glass-bg: rgba(28, 28, 30, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: rgba(0, 0, 0, 0.3);
+  --blur-amount: 40px;
+  --glow-color: rgba(41, 151, 255, 0.4);
 
   // Material theme colors for dark mode
   --mat-primary: #2997ff;
@@ -71,6 +87,9 @@
 .mat-mdc-card {
   --mat-card-elevated-container-color: var(--card-bg);
   --mat-card-elevated-label-text-color: var(--text-color);
+  backdrop-filter: blur(var(--blur-amount));
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 var(--glass-shadow);
 }
 
 .mat-toolbar {

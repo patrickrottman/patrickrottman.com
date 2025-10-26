@@ -57,12 +57,16 @@
       width: 2.5rem;
       height: 2.5rem;
       border-radius: 50%;
-      background: var(--card-bg);
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--blur-amount));
       border: 4px solid var(--accent-color);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 1;
+      box-shadow: 0 4px 16px 0 var(--glass-shadow),
+                  0 0 12px 0 var(--glow-color);
+      transition: all 0.3s ease;
 
       span {
         font-size: 0.75rem;
@@ -80,7 +84,21 @@
     .achievements {
       max-width: 700px;
       margin: 0 auto;
-      background: var(--card-bg);
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--blur-amount));
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px 0 var(--glass-shadow),
+                  inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
+      padding: 2rem;
+      border-radius: 20px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: 0 16px 48px 0 var(--glass-shadow),
+                    0 0 0 1px var(--glow-color),
+                    inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
+      }
 
       ul {
         list-style: none;

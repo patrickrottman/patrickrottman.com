@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class SummaryComponent {
   title = 'Patrick Rottman';
-  yearsOfExperience: number;
+  yearsOfExperience: string;
 
   constructor(
     private viewportScroller: ViewportScroller,
@@ -23,12 +23,15 @@ export class SummaryComponent {
     this.yearsOfExperience = this.calculateYearsOfExperience();
   }
 
-  private calculateYearsOfExperience(): number {
+  private calculateYearsOfExperience(): string {
     const startDate = new Date('2017-05-01');
     const now = new Date();
     const years = now.getFullYear() - startDate.getFullYear();
     const monthDiff = now.getMonth() - startDate.getMonth();
-    return monthDiff < 0 ? years - 1 : years;
+    const numYears = monthDiff < 0 ? years - 1 : years;
+
+    const numberWords = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+    return numYears <= 10 ? numberWords[numYears] : numYears.toString();
   }
 
   scrollToSection(elementId: string): void {
