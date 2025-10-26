@@ -29,6 +29,12 @@ export class SkillsComponent {
     { icon: 'storage', name: 'Redis' },
     { icon: 'merge', name: 'Git' },
     { icon: 'memory', name: 'IoT' },
-    { icon: 'brush', name: 'Figma' }
+    { icon: 'brush', name: 'Figma' },
+    { icon: 'extension', name: 'MCP Engineering' },
+    { icon: 'hub', name: 'Agent Orchestration' },
+    { icon: 'psychology', name: 'LLM Integration' },
+    { icon: 'smart_toy', name: 'AI/ML' },
+    { icon: 'architecture', name: 'Prompt Engineering' },
+    { icon: 'category', name: 'RAG Systems' }
   ];
 } 
