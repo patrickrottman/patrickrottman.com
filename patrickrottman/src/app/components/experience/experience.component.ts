@@ -56,7 +56,7 @@ export class ExperienceComponent {
       period: 'May 2022 — August 2022',
       achievements: [
         'Delivered features for enterprise applications, contributing across the full stack.',
-        'Exceeded project deadlines, leading to early promotion.'
+        'Consistently delivered ahead of schedule, earning early promotion.'
       ]
     },
     {
