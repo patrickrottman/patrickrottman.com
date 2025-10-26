@@ -33,11 +33,18 @@ export class HeaderComponent {
     if (this.router.url !== '/') {
       this.router.navigate(['/']).then(() => {
         setTimeout(() => {
-          this.viewportScroller.scrollToAnchor(elementId);
+          this.smoothScrollTo(elementId);
         }, 100);
       });
     } else {
-      this.viewportScroller.scrollToAnchor(elementId);
+      this.smoothScrollTo(elementId);
+    }
+  }
+
+  private smoothScrollTo(elementId: string): void {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
