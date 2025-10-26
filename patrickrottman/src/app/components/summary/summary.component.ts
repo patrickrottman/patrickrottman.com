@@ -14,11 +14,22 @@ import { Router } from '@angular/router';
 })
 export class SummaryComponent {
   title = 'Patrick Rottman';
+  yearsOfExperience: number;
 
   constructor(
     private viewportScroller: ViewportScroller,
     private router: Router
-  ) {}
+  ) {
+    this.yearsOfExperience = this.calculateYearsOfExperience();
+  }
+
+  private calculateYearsOfExperience(): number {
+    const startDate = new Date('2017-05-01');
+    const now = new Date();
+    const years = now.getFullYear() - startDate.getFullYear();
+    const monthDiff = now.getMonth() - startDate.getMonth();
+    return monthDiff < 0 ? years - 1 : years;
+  }
 
   scrollToSection(elementId: string): void {
     if (this.router.url !== '/') {

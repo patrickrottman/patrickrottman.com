@@ -22,9 +22,11 @@
 
   <mat-card class="game-card">
     <mat-card-content>
-      <ng-container *ngIf="connectionState$ | async as connectionState">
-        <div class="connection-setup" *ngIf="connectionState === 'disconnected'">
-          <div *ngIf="!localConnectionString" class="connection-choice">
+      @if (connectionState$ | async; as connectionState) {
+        @if (connectionState === 'disconnected') {
+          <div class="connection-setup">
+          @if (!localConnectionString) {
+            <div class="connection-choice">
             <h2>Choose Your Role</h2>
             
             <div class="choice-cards">
@@ -56,9 +58,10 @@
                 </div>
               </mat-card>
             </div>
-          </div>
-
-          <div *ngIf="localConnectionString && isHost" class="host-view">
+            </div>
+          }
+          @if (localConnectionString && isHost) {
+            <div class="host-view">
             <h2>Game Created!</h2>
             <div class="game-id-section">
               <h3>Share this Game ID</h3>
@@ -71,15 +74,18 @@
               <mat-spinner diameter="20"></mat-spinner>
               <span>Waiting for player to join...</span>
             </div>
+            </div>
+          }
           </div>
-        </div>
-
-        <div class="connecting" *ngIf="connectionState === 'connecting'">
+        }
+        @if (connectionState === 'connecting') {
+          <div class="connecting">
           <mat-spinner diameter="50"></mat-spinner>
           <p>{{ connectionStatus }}</p>
-        </div>
-
-        <div class="game-lobby" *ngIf="connectionState === 'connected'">
+          </div>
+        }
+        @if (connectionState === 'connected') {
+          <div class="game-lobby">
           <h2>Connected!</h2>
           <div class="game-instructions">
             <h3>How to Play</h3>
@@ -93,22 +99,26 @@
           <button mat-raised-button color="primary" (click)="startGame()">
             Start Game
           </button>
-        </div>
-      </ng-container>
+          </div>
+        }
+      }
 
-      <div class="connection-logs" *ngIf="connectionLogs.length && (pongState$ | async) !== 'playing'">
+      @if (connectionLogs.length && (pongState$ | async) !== 'playing') {
+        <div class="connection-logs">
         <h3>Connection Status</h3>
         <div class="log-entries">
-          <div *ngFor="let log of connectionLogs" 
-               class="log-entry"
-               [class.error]="log.type === 'error'">
-            <span class="log-time">{{ log.timestamp | date:'HH:mm:ss' }}</span>
-            <span class="log-message">{{ log.message }}</span>
-          </div>
+          @for (log of connectionLogs; track log.timestamp) {
+            <div class="log-entry"
+                 [class.error]="log.type === 'error'">
+              <span class="log-time">{{ log.timestamp | date:'HH:mm:ss' }}</span>
+              <span class="log-message">{{ log.message }}</span>
+            </div>
+          }
         </div>
-      </div>
+        </div>
+      }
 
-      <ng-container *ngIf="(pongState$ | async) === 'playing' && (gameState$ | async) as game">
+      @if ((pongState$ | async) === 'playing' && (gameState$ | async); as game) {
         <div class="game-board">
           <div class="score">
             <span>You: {{game.playerScore}}</span>
@@ -125,7 +135,7 @@
             Use ↑ and ↓ arrow keys to move your paddle
           </div>
         </div>
-      </ng-container>
+      }
     </mat-card-content>
   </mat-card>
 </div> 

@@ -12,11 +12,23 @@ import { MatCardModule } from '@angular/material/card';
 export class ExperienceComponent {
   experiences = [
     {
+      year: '2025',
+      title: 'Senior Software Engineer, Team Lead',
+      company: 'DriveCentric',
+      location: 'St. Louis, MO',
+      period: 'April 2025 — Current',
+      achievements: [
+        'Leading the R&D team, building fast-paced features and driving value by integrating AI into our existing stack.',
+        'Pushing the bounds of what is possible with LLMs and AI, exploring cutting-edge solutions for real-world business problems.',
+        'Collaborating with stakeholders to ensure rapid delivery and innovation while maintaining product quality.'
+      ]
+    },
+    {
       year: '2024',
       title: 'Senior Software Engineer',
       company: 'DriveCentric',
       location: 'St. Louis, MO',
-      period: 'September 2024 — Current',
+      period: 'September 2024 — April 2025',
       achievements: [
         'Leading the company\'s AI initiative \'AIM,\' a cloud-based marketing department creating personalized messaging for unparalleled engagement.',
         'Delivered successful integration with Ford, surpassing deadlines and client expectations.',
