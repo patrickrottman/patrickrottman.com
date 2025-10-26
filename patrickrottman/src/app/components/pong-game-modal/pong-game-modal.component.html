@@ -2,8 +2,9 @@
   <button class="close-button" (click)="closeGame()">
     <mat-icon>close</mat-icon>
   </button>
-  
-  <div class="game-board" *ngIf="gameState$ | async as game">
+
+  @if (gameState$ | async; as game) {
+    <div class="game-board">
     <div class="score">
       <span>You: {{game.playerScore}}</span>
       <span>Opponent: {{game.opponentScore}}</span>
@@ -21,5 +22,6 @@
     <div class="instructions">
       Use ↑ and ↓ arrow keys or drag paddle to play | ESC or × to quit
     </div>
-  </div>
+    </div>
+  }
 </div> 

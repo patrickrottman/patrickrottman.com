@@ -1,7 +1,8 @@
 @use '@angular/material' as mat;
 
 // Include the common styles for Angular Material
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Define our colors using CSS custom properties
 :root {
@@ -20,9 +21,17 @@
   --primary-color: #515154;
   --secondary-color: #86868b;
   --accent-color: #0071e3;
-  --background-color: #fff;
+  --background-color: #f8f9fa;
   --text-color: #515154;
-  --card-bg: #f5f5f7;
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-bg-hover: rgba(255, 255, 255, 0.85);
+
+  // Glassmorphism effects
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --glass-shadow: rgba(0, 0, 0, 0.1);
+  --blur-amount: 40px;
+  --glow-color: rgba(0, 113, 227, 0.3);
 
   // Material theme colors
   --mat-primary: #0071e3;
@@ -39,9 +48,17 @@
   --primary-color: #f5f5f7;
   --secondary-color: #a1a1a6;
   --accent-color: #2997ff;
-  --background-color: #1d1d1f;
+  --background-color: #0a0a0b;
   --text-color: #f5f5f7;
-  --card-bg: #2c2c2e;
+  --card-bg: rgba(44, 44, 46, 0.95);
+  --card-bg-hover: rgba(44, 44, 46, 0.98);
+
+  // Glassmorphism effects for dark mode
+  --glass-bg: rgba(28, 28, 30, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: rgba(0, 0, 0, 0.3);
+  --blur-amount: 40px;
+  --glow-color: rgba(41, 151, 255, 0.4);
 
   // Material theme colors for dark mode
   --mat-primary: #2997ff;
@@ -56,20 +73,23 @@
 // Material theme overrides
 .mat-mdc-button.mat-primary,
 .mat-mdc-raised-button.mat-primary {
-  --mdc-filled-button-container-color: var(--mat-primary);
-  --mdc-filled-button-label-text-color: white;
+  --mat-button-filled-container-color: var(--mat-primary);
+  --mat-button-filled-label-text-color: white;
   font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Helvetica, Arial, sans-serif !important;
 }
 
 .mat-mdc-button.mat-accent {
-  --mdc-filled-button-container-color: var(--mat-accent);
-  --mdc-filled-button-label-text-color: white;
+  --mat-button-filled-container-color: var(--mat-accent);
+  --mat-button-filled-label-text-color: white;
 }
 
 .mat-mdc-card {
-  --mdc-elevated-card-container-color: var(--card-bg);
-  --mdc-elevated-card-label-text-color: var(--text-color);
+  --mat-card-elevated-container-color: var(--card-bg);
+  --mat-card-elevated-label-text-color: var(--text-color);
+  backdrop-filter: blur(var(--blur-amount));
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 var(--glass-shadow);
 }
 
 .mat-toolbar {
@@ -83,16 +103,16 @@
 
 // Update the Material button override
 .mat-mdc-raised-button.mat-primary {
-  --mdc-protected-button-container-color: var(--background-color);
-  --mdc-protected-button-container-elevation: 0;
-  --mdc-protected-button-label-text-color: var(--accent-color);
+  --mat-button-protected-container-color: var(--background-color);
+  --mat-button-protected-container-elevation: 0;
+  --mat-button-protected-label-text-color: var(--accent-color);
   border: 1px solid var(--accent-color);
   font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Helvetica, Arial, sans-serif !important;
 
   &:hover {
-    --mdc-protected-button-container-color: var(--accent-color);
-    --mdc-protected-button-label-text-color: white;
+    --mat-button-protected-container-color: var(--accent-color);
+    --mat-button-protected-label-text-color: white;
   }
 }
 

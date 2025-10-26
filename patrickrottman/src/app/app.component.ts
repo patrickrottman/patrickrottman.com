@@ -19,5 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+  currentYear = new Date().getFullYear();
+
   constructor(public themeService: ThemeService) {}
 }

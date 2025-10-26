@@ -2,6 +2,13 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+
+  app-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
 
   main {
     flex: 1;
