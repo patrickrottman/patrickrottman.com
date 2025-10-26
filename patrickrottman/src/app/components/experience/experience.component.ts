@@ -30,9 +30,9 @@ export class ExperienceComponent {
       location: 'St. Louis, MO',
       period: 'September 2024 — April 2025',
       achievements: [
-        'Leading the company\'s AI initiative \'AIM,\' a cloud-based marketing department creating personalized messaging for unparalleled engagement.',
+        'Led the company\'s AI initiative \'AIM,\' a cloud-based marketing department creating personalized messaging for unparalleled engagement.',
         'Delivered successful integration with Ford, surpassing deadlines and client expectations.',
-        'Collaborating with stakeholders to ensure fast resolutions to customer needs.'
+        'Collaborated with stakeholders to ensure fast resolutions to customer needs.'
       ]
     },
     {
