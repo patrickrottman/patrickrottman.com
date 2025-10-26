@@ -1,7 +1,8 @@
 @use '@angular/material' as mat;
 
 // Include the common styles for Angular Material
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Define our colors using CSS custom properties
 :root {
@@ -56,20 +57,20 @@
 // Material theme overrides
 .mat-mdc-button.mat-primary,
 .mat-mdc-raised-button.mat-primary {
-  --mdc-filled-button-container-color: var(--mat-primary);
-  --mdc-filled-button-label-text-color: white;
+  --mat-button-filled-container-color: var(--mat-primary);
+  --mat-button-filled-label-text-color: white;
   font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Helvetica, Arial, sans-serif !important;
 }
 
 .mat-mdc-button.mat-accent {
-  --mdc-filled-button-container-color: var(--mat-accent);
-  --mdc-filled-button-label-text-color: white;
+  --mat-button-filled-container-color: var(--mat-accent);
+  --mat-button-filled-label-text-color: white;
 }
 
 .mat-mdc-card {
-  --mdc-elevated-card-container-color: var(--card-bg);
-  --mdc-elevated-card-label-text-color: var(--text-color);
+  --mat-card-elevated-container-color: var(--card-bg);
+  --mat-card-elevated-label-text-color: var(--text-color);
 }
 
 .mat-toolbar {
@@ -83,16 +84,16 @@
 
 // Update the Material button override
 .mat-mdc-raised-button.mat-primary {
-  --mdc-protected-button-container-color: var(--background-color);
-  --mdc-protected-button-container-elevation: 0;
-  --mdc-protected-button-label-text-color: var(--accent-color);
+  --mat-button-protected-container-color: var(--background-color);
+  --mat-button-protected-container-elevation: 0;
+  --mat-button-protected-label-text-color: var(--accent-color);
   border: 1px solid var(--accent-color);
   font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Helvetica, Arial, sans-serif !important;
 
   &:hover {
-    --mdc-protected-button-container-color: var(--accent-color);
-    --mdc-protected-button-label-text-color: white;
+    --mat-button-protected-container-color: var(--accent-color);
+    --mat-button-protected-label-text-color: white;
   }
 }
 
