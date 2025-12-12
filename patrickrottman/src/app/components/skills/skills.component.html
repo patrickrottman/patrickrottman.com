@@ -1,13 +1,18 @@
 <section id="skills" class="skills-section fade-in">
   <h2>Technical Expertise</h2>
-  <div class="skills-grid">
-    @for (skill of skills; track skill.name) {
-      <mat-card class="skill-item">
-        <mat-card-content>
-          <mat-icon>{{skill.icon}}</mat-icon>
-          <p>{{ skill.name }}</p>
-        </mat-card-content>
-      </mat-card>
-    }
-  </div>
+  @for (category of skillCategories; track category.category) {
+    <div class="skill-category">
+      <h3 class="category-title">{{ category.category }}</h3>
+      <div class="skills-grid">
+        @for (skill of category.skills; track skill.name) {
+          <mat-card class="skill-item">
+            <mat-card-content>
+              <mat-icon>{{skill.icon}}</mat-icon>
+              <p>{{ skill.name }}</p>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    </div>
+  }
 </section> 
